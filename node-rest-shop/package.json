@@ -1,0 +1,27 @@
+{
+  "name": "rest-shop",
+  "version": "1.0.0",
+  "description": "A Node.js RESTful Api tutoeial porject (Build a simple shop Api)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brayan-chiquito/node-product.git"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "author": "brayan chiquito",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brayan-chiquito/node-product/issues"
+  },
+  "homepage": "https://github.com/brayan-chiquito/node-product#readme",
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
