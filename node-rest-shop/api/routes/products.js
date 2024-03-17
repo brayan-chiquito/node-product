@@ -1,42 +1,45 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const multer = require('multer');
+const checkAuth = require('../middleware/check-auth');
+const ProductContrller = require('../controllers/products');
 
-router.get('/', (req, res, next) => {
-    res.status(200).json({
-        message: 'Handling GET requests to /products'
-    });
-});
-
-router.post('/', (req, res, next) => {
-    res.status(201).json({
-        message: 'Handling POST requests to /products'
-    });
-});
-
-router.get('/:productId', (req, res, next) => {
-    const id = req.params.productId;
-    if (id === 'special') {
-        res.status(200).json({
-            message: 'You discovered the special ID',
-            id: id
-        });
-    } else {
-        res.status(200).json({
-            message: 'You passed an ID'
-        });
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './uploads/');
+    },
+    filename: function(req, file, cb){
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
     }
 });
 
-router.patch('/:productId', (req, res, next) => {
-    res.status(200).json({
-        message: 'Updated product!'
-    });
+
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+        cb(null, true);
+    }else{
+        cb(null, false);
+    }
+};
+
+const upload = multer({
+    storage: storage, limits:{
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
 });
 
-router.delete('/:productId', (req, res, next) => {
-    res.status(200).json({
-        message: 'Deleted product!'
-    });
-});
+const Product = require('../models/product');
+
+router.get('/', ProductContrller.products_get_all);
+
+router.post('/', checkAuth, upload.single('productImage'), ProductContrller.products_create_product);
+
+router.get('/:productId', ProductContrller.products_get_product);
+
+router.patch('/:productId', checkAuth, ProductContrller.products_update_product);
+
+router.delete('/:productId', checkAuth, ProductContrller.products_delete_product);
 
 module.exports = router;
